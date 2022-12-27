@@ -183,21 +183,13 @@ with lda_model:
                                                alpha='auto',
                                                per_word_topics=True,
                                                 minimum_probability=0)
-    # lda_model.save('lda_train.model')
-    # Print the Keyword in the 10 topics
-    # st.write(ldamodel.print_topics())
-
-    # model_topics = ldamodel.show_topics(formatted=False)
-    # st.write(ldamodel.print_topics(num_words=10))
 
 
-    word_dict = {};
-    for i in range(11):
-        words = ldamodel.show_topic(i, topn = 10)
-        word_dict['Topic # ' + '{:02d}'.format(i)] = [i[0] for i in words]
-    pd.DataFrame(word_dict)
+    model_topics = ldamodel.show_topics(formatted=False)
+    word_table = pd.DataFrame(ldamodel.print_topics(num_words=10))
 
-    st.write(word_dict)
+
+    st.write(word_table)
 
 
 
