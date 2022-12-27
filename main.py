@@ -143,7 +143,7 @@ with lda_model:
 
 # editing here
     df = text_data[:-1]
-    data = df.text.tolist()
+    data = df.comment_text.tolist()
     data_list = list(data)
     data_words = [i.split() for i in data_list]
 
