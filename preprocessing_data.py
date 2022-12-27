@@ -70,6 +70,7 @@ def preprocessing(text):
     return text
 
 import spacy
+spacy.cli.download("en")
 nlp = spacy.load('en_core_web_lg', disable=['parser', 'ner'])
 
 def posta(texts, allowed_postags=['NOUN', 'VERB']):  # ['NOUN', 'ADJ', 'VERB', 'ADV']
