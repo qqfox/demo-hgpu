@@ -16,7 +16,6 @@ import string
 import re
 import gensim
 import nltk
-nltk.download('punkt')
 from gensim.parsing.preprocessing import STOPWORDS
 lemmatizer=WordNetLemmatizer()
 seed = 42
@@ -40,6 +39,7 @@ import pyLDAvis.sklearn
 # preprocessing part
 
 nltk.download('punkt')
+nltk.download('wordnet')
 from gensim.parsing.preprocessing import STOPWORDS
 
 from preprocessing_data import all_vocab_extraction, word_freq_bigram, preprocessing
