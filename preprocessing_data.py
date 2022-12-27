@@ -5,26 +5,38 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
-import collections
-from collections import defaultdict
+
 import string
 import re
 import gensim
 import nltk
-nltk.download('punkt')
 from gensim.parsing.preprocessing import STOPWORDS
 lemmatizer=WordNetLemmatizer()
+seed = 42
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.feature_extraction.text import CountVectorizer
+
+import math
+from wordcloud import WordCloud
+import streamlit as st
+from streamlit import components
+import io
+import requests
 from nltk.util import ngrams
+import pyLDAvis
+import pyLDAvis.sklearn
+# preprocessing part
+
+nltk.download('punkt')
+nltk.download('wordnet')
+from gensim.parsing.preprocessing import STOPWORDS
 
 seed = 42
 
 
-# preprocessing part
-
-nltk.download('punkt')
-from gensim.parsing.preprocessing import STOPWORDS
 #Expand the reviews x is aninput string of any length. Convert all the words to lower case
 def preprocessing(text):
     text = str(text).lower()
