@@ -110,11 +110,12 @@ with lda_model:
     df = text_data[:-1]
     data = df.comment_text.tolist()
     data_list = list(data)
-    data_words = [i.split() for i in data_list if not i in input_more_sw]
+    data_words= [i.split() for i in data_list]
+    data_text = [word for word in data_words if not word in input_more_sw]
 
     # Build the bigram and trigram models
-    bigram = gensim.models.Phrases(data_words, min_count=5, threshold=12) # higher threshold fewer phrases.
-    trigram = gensim.models.Phrases(bigram[data_words], threshold=12)
+    bigram = gensim.models.Phrases(data_text, min_count=5, threshold=12) # higher threshold fewer phrases.
+    trigram = gensim.models.Phrases(bigram[data_text], threshold=12)
     # Faster way to get a sentence clubbed as a trigram/bigram
     bigram_mod = gensim.models.phrases.Phraser(bigram)
     trigram_mod = gensim.models.phrases.Phraser(trigram)
@@ -122,7 +123,7 @@ with lda_model:
         return [bigram_mod[doc] for doc in texts]
     def make_trigrams(texts):
         return [trigram_mod[bigram_mod[doc]] for doc in texts]
-    data_words_trigrams = make_trigrams(data_words)
+    data_words_trigrams = make_trigrams(data_text)
     # Create Dictionary
     id2word = corpora.Dictionary(data_words_trigrams)
     # Create Corpus
