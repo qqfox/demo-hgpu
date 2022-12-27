@@ -110,8 +110,8 @@ with lda_model:
     df = text_data[:-1]
     data = df.comment_text.tolist()
     data_list = list(data)
-    data_words= [i.split() for i in data_list]
-    data_text = [word for word in data_words if not word in input_more_sw]
+    data_text= [i.split() for i in data_list if not i in input_more_sw]
+    # data_text = [word for word in data_words if not word in input_more_sw]
 
     # Build the bigram and trigram models
     bigram = gensim.models.Phrases(data_text, min_count=5, threshold=12) # higher threshold fewer phrases.
