@@ -190,7 +190,7 @@ with lda_model:
     # model_topics = ldamodel.show_topics(formatted=False)
     # st.write(ldamodel.print_topics(num_words=10))
 
-    html_ = pyLDAvis.gensim.prepare(topic_model=ldamodel,corpus=corpus,  dictionary=id2word)
+    html_ = pyLDAvis.gensim.prepare(ldamodel,corpus, id2word)
     html_string = pyLDAvis.prepared_data_to_html(html_)
     components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
