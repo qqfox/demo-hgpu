@@ -145,7 +145,7 @@ with lda_model:
     texts = text_data['comment_text']
     tm = ktrain.text.get_topic_model(texts, n_topics=None, n_features=10000)
     st.write(tm.print_topics())
-    tm.build(texts, threshold=0.25))
+    st.write(tm.build(texts, threshold=0.25))
 
 
     # CountVec = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
@@ -170,7 +170,7 @@ with lda_model:
     # disp_col.write(topic_keywords)
 
     
-    html_ = pyLDAvis.sklearn.prepare(lda_model_, data_vectorized, CountVec)
-    html_string = pyLDAvis.prepared_data_to_html(html_)
-    components.v1.html(html_string, width=1300, height=800, scrolling=True)
+    # html_ = pyLDAvis.sklearn.prepare(lda_model_, data_vectorized, CountVec)
+    # html_string = pyLDAvis.prepared_data_to_html(html_)
+    # components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
