@@ -10,10 +10,8 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 import pandas as pd
-import seaborn as sns
 import matplotlib.pyplot as plt
-import collections
-from collections import defaultdict
+
 import string
 import re
 import gensim
@@ -24,14 +22,13 @@ lemmatizer=WordNetLemmatizer()
 seed = 42
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
-from sklearn.decomposition import LatentDirichletAllocation, TruncatedSVD
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.decomposition import LatentDirichletAllocation
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn import metrics
 import pickle
 import warnings
 warnings.filterwarnings("ignore")
 import math
-from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN
 from wordcloud import WordCloud
 import streamlit as st
 from streamlit import components
@@ -65,7 +62,7 @@ with header:
 with dataset:
     st.header('this dataset contains all the text crawled from reddit')
     st.text('dataset description')
-    filename = r"C:\Users\USER\Documents\GitHub\demo-hgpu\data_rx6900_Reddit_070822.csv"
+    filename = r"C:\Users\USER\Documents\GitHub\demo-hgpu\data\data_rx6900_Reddit_070822.csv"
     text_data = pd.read_csv(filename, index_col = 0)
 
     # text_data = pd.read_csv(r'C:\Users\USER\Documents\GitHub\GPU\streamlit\data\data_rx6900_Reddit_070822.csv', index_col=0)
@@ -122,15 +119,8 @@ with features:
 
 
 with lda_model:
-    @st.cache
 
-    def show_topics(vectorizer, lda_model, n_words): #num_words
-        keywords = np.array(vectorizer.get_feature_names())
-        topic_keywords = []
-        for topic_weights in lda_model.components_:
-            top_keyword_locs = (-topic_weights).argsort()[:n_words]
-            topic_keywords.append(keywords.take(top_keyword_locs))
-        return topic_keywords
+    
 
     sel_col, disp_col = st.columns(2)
 
@@ -140,18 +130,26 @@ with lda_model:
     
     num_words = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
-    min_occur = sel_col.selectbox('set the minimum times that words occur in the corpus', options=[3,4,5,6,7,8,9,10],index=2)
-    
 
-    CountVec = CountVectorizer(max_df=0.95, min_df=min_occur, max_features=50000) #min_occur
-    data_vectorized = CountVec.fit_transform(text) # fit input data
-    lda_model_ = LatentDirichletAllocation(n_components=num_clusters, #num_clusters
+
+    CountVec = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
+    data_vectorized = CountVec.fit_transform(total_vocabulary) # fit input data
+    lda_model_ = LatentDirichletAllocation(n_components=num_clusters,
                                         max_iter=10, 
                                         learning_method='online',
                                         learning_offset=70.,
                                         learning_decay = .7,
                                         random_state=0).fit(data_vectorized)
-    topic_keywords = show_topics(CountVec, lda_model_, num_words)    #num_words 10    # number of topic kw can be changed
+    
+    def show_topics(vectorizer, lda_model, n_words=10):
+        keywords = np.array(vectorizer.get_feature_names())
+        topic_keywords = []
+        for topic_weights in lda_model.components_:
+            top_keyword_locs = (-topic_weights).argsort()[:n_words]
+            topic_keywords.append(keywords.take(top_keyword_locs))
+        return topic_keywords
+
+    topic_keywords = show_topics(CountVec, lda_model_, num_words)    
 
     disp_col.write(topic_keywords)
 
