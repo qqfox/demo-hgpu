@@ -186,7 +186,7 @@ with lda_model:
 
 
     model_topics = ldamodel.show_topics(formatted=False)
-    word_table = pd.DataFrame(ldamodel.print_topics(num_words=10))
+    word_table = pd.DataFrame(ldamodel.print_topics(num_words=10)) # cần thêm tên columns
 
 
     st.write(word_table)
@@ -194,9 +194,7 @@ with lda_model:
 
 
 
-    vis = pyLDAvis.gensim.prepare(topic_model=ldamodel, 
-                              corpus=corpus, 
-                              dictionary=id2word)
+    vis = pyLDAvis.gensim.prepare(ldamodel, corpus, id2word)
     html_string = pyLDAvis.prepared_data_to_html(vis)
     components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
