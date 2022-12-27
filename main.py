@@ -11,7 +11,8 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 import pandas as pd
 import matplotlib.pyplot as plt
-import ktrain
+import gensim
+import gensim.corpora as corpora
 
 import string
 import re
@@ -140,12 +141,43 @@ with lda_model:
     num_words = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
 
-    ktrain.text.preprocessor.detect_lang = ktrain.text.textutils.detect_lang
+    def topic(text):
+        id_word = corpora.Dictionary(text)
 
-    texts = text_data['comment_text']
-    tm = ktrain.text.get_topic_model(texts, n_topics=None, n_features=10000)
-    st.write(tm.print_topics())
-    st.write(tm.build(texts, threshold=0.25))
+        corpus = [id_word.doc2bow(text) for text in text]
+        ldamodel = gensim.models.ldamodel.LdaModel(
+            corpus=corpus,
+            id2word=id_word,
+            num_topics=10, 
+            random_state=2021,
+            update_every=1,
+            chunksize=100,
+            passes=10,
+            alpha='auto',
+            per_word_topics=True
+        )
+        
+        return  ldamodel,corpus,id_word
+
+    lda_model ,corpus,id_word = topic(text)   #All applied to our review ext
+
+    st.write(lda_model.print_topics(10)) #generate first 10 topics
+
+    html_ = pyLDAvis.gensim.prepare(topic_model=lda_model, 
+                              corpus=corpus, 
+                              dictionary=id_word)
+    html_string = pyLDAvis.prepared_data_to_html(html_)
+    components.v1.html(html_string, width=1300, height=800, scrolling=True)
+
+
+
+
+    # ktrain.text.preprocessor.detect_lang = ktrain.text.textutils.detect_lang
+
+    # texts = text_data['comment_text']
+    # tm = ktrain.text.get_topic_model(texts, n_topics=None, n_features=10000)
+    # st.write(tm.print_topics())
+    # st.write(tm.build(texts, threshold=0.25))
 
 
     # CountVec = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
