@@ -98,7 +98,7 @@ def preprocessing(text):
 def all_vocab_extraction(df):
     # preprocessing the text column in dataframe
 
-    # df['comment_text'] = df.comment_text.apply(preprocessing)
+    df['comment_text'] = df.comment_text.apply(preprocessing)
 
     df_ = df[:]
     data_text = df_.comment_text.tolist()
