@@ -12,15 +12,12 @@ import re
 import gensim
 import nltk
 from gensim.parsing.preprocessing import STOPWORDS
+lemmatizer=WordNetLemmatizer()
 seed = 42
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
-
-from nltk.stem import WordNetLemmatizer
-  
-lemmatizer = WordNetLemmatizer()
 
 import math
 from wordcloud import WordCloud
@@ -120,9 +117,9 @@ def all_vocab_extraction(df):
         
     tokens_vs_stop = word_tokenize(corpus)
     all_text = [word for word in tokens_vs_stop]
-    all_textt = [lemmatizer.lemmatize(word) for word in all_text]
+    # total_vocabulary = [WordNetLemmatizer().lemmatize(word) for word in all_text]
 
-    return  all_textt # total_vocabulary
+    return all_text #total_vocabulary
 
 def word_freq_bigram(text):
     
