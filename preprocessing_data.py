@@ -100,8 +100,8 @@ def all_vocab_extraction(df):
 
     # df['comment_text'] = df.comment_text.apply(preprocessing)
 
-    df = df[:]
-    data_text = df.comment_text.tolist()
+    df_ = df[:]
+    data_text = df_.comment_text.tolist()
     data_list = list(data_text)
     data_words = [i.split() for i in data_list]
 
