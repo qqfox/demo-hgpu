@@ -193,8 +193,9 @@ with lda_model:
 
 
 
+    import pyLDAvis.gensim_models
 
-    vis = pyLDAvis.gensim.prepare(ldamodel, corpus, id2word)
+    vis = pyLDAvis.gensim_models.prepare(ldamodel, corpus, id2word)
     html_string = pyLDAvis.prepared_data_to_html(vis)
     components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
