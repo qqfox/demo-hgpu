@@ -136,15 +136,15 @@ with lda_model:
 
     input_more_sw = sel_col.text_input('Please add in words that you want to remove in lower form, for examples', '"hello", "hi"')
 
-    text = [word for word in total_vocabulary if not word in input_more_sw]
+    text_vocab = [word for word in total_vocabulary if not word in input_more_sw]
     
     num_words = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
 
-    def topic(text):
-        id_word = corpora.Dictionary(text)
+    def topic(text_input):
+        id_word = corpora.Dictionary(text_input)
 
-        corpus = [id_word.doc2bow(text) for text in text]
+        corpus = [id_word.doc2bow(text) for text in text_input]
         ldamodel = gensim.models.ldamodel.LdaModel(
             corpus=corpus,
             id2word=id_word,
@@ -159,7 +159,7 @@ with lda_model:
         
         return  ldamodel,corpus,id_word
 
-    lda_model ,corpus,id_word = topic(text)   #All applied to our review ext
+    lda_model ,corpus,id_word = topic(text_vocab)   #All applied to our review ext
 
     st.write(lda_model.print_topics(10)) #generate first 10 topics
 
