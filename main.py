@@ -102,18 +102,20 @@ with lda_model:
     
     sel_col, disp_col = st.columns(2)
     input_more_sw = sel_col.text_input('Please add in words that you want to remove in lower form, for examples', '"hello", "hi"')
-    text_vocab = [word for word in total_vocabulary if not word in input_more_sw]
     
-    num_words = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
+    
+    num_word_set = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
 # editing here
     df = text_data[:-1]
     data = df.comment_text.tolist()
     data_list = list(data)
     data_words = [i.split() for i in data_list]
+    text_vocab = [word for word in data_words if not word in input_more_sw]
+
     # Build the bigram and trigram models
-    bigram = gensim.models.Phrases(data_words, min_count=5, threshold=12) # higher threshold fewer phrases.
-    trigram = gensim.models.Phrases(bigram[data_words], threshold=12)
+    bigram = gensim.models.Phrases(text_vocab, min_count=5, threshold=12) # higher threshold fewer phrases.
+    trigram = gensim.models.Phrases(bigram[text_vocab], threshold=12)
     # Faster way to get a sentence clubbed as a trigram/bigram
     bigram_mod = gensim.models.phrases.Phraser(bigram)
     trigram_mod = gensim.models.phrases.Phraser(trigram)
@@ -121,7 +123,7 @@ with lda_model:
         return [bigram_mod[doc] for doc in texts]
     def make_trigrams(texts):
         return [trigram_mod[bigram_mod[doc]] for doc in texts]
-    data_words_trigrams = make_trigrams(data_words)
+    data_words_trigrams = make_trigrams(text_vocab)
     # Create Dictionary
     id2word = corpora.Dictionary(data_words_trigrams)
     # Create Corpus
@@ -132,7 +134,7 @@ with lda_model:
     # Build LDA model
     ldamodel = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                                id2word=id2word,
-                                               num_topics=3,
+                                               num_topics=num_clusters,
                                                random_state=100,
                                                update_every=1,
                                                chunksize=100,
@@ -141,7 +143,7 @@ with lda_model:
                                                per_word_topics=True,
                                                 minimum_probability=0)
     model_topics = ldamodel.show_topics(formatted=False)
-    word_table = pd.DataFrame(ldamodel.print_topics(num_words=10)) # cần thêm tên columns
+    word_table = pd.DataFrame(ldamodel.print_topics(num_words=num_word_set)) # cần thêm tên columns
     st.write(word_table)
 
 
