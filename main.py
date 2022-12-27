@@ -187,12 +187,12 @@ with lda_model:
     # Print the Keyword in the 10 topics
     # st.write(ldamodel.print_topics())
 
-    # model_topics = ldamodel.show_topics(formatted=False)
-    # st.write(ldamodel.print_topics(num_words=10))
+    model_topics = ldamodel.show_topics(formatted=False)
+    st.write(ldamodel.print_topics(num_words=10))
 
-    html_ = pyLDAvis.gensim.prepare(ldamodel,corpus, id2word)
-    html_string = pyLDAvis.prepared_data_to_html(html_)
-    components.v1.html(html_string, width=1300, height=800, scrolling=True)
+    # html_ = pyLDAvis.gensim.prepare(ldamodel,corpus, id2word)
+    # html_string = pyLDAvis.prepared_data_to_html(html_)
+    # components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
 # tried method here
     # ktrain.text.preprocessor.detect_lang = ktrain.text.textutils.detect_lang
