@@ -62,8 +62,8 @@ with header:
 with dataset:
     st.header('this dataset contains all the text crawled from reddit')
     st.text('dataset description')
-    filename = r"https://raw.githubusercontent.com/qqfox/demo-hgpu/data/data_rx6900_Reddit_070822"
-    text_data = pd.read_csv(filename, index_col = 0)
+    # filename = r"https://raw.githubusercontent.com/qqfox/demo-hgpu/data/data_rx6900_Reddit_070822.csv"
+    text_data = pd.read_csv('https://raw.githubusercontent.com/qqfox/demo-hgpu/data/data_rx6900_Reddit_070822.csv', index_col = 0)
 
     # text_data = pd.read_csv(r'C:\Users\USER\Documents\GitHub\GPU\streamlit\data\data_rx6900_Reddit_070822.csv', index_col=0)
     st.write(text_data.head(5))
