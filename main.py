@@ -185,12 +185,12 @@ with lda_model:
                                                 minimum_probability=0)
     # lda_model.save('lda_train.model')
     # Print the Keyword in the 10 topics
-    st.write(lda_model.print_topics())
+    # st.write(ldamodel.print_topics())
 
     # model_topics = ldamodel.show_topics(formatted=False)
     # st.write(ldamodel.print_topics(num_words=10))
 
-    html_ = pyLDAvis.gensim.prepare(topic_model=ldamodel,corpus=texts,  dictionary=id2word)
+    html_ = pyLDAvis.gensim.prepare(topic_model=ldamodel,corpus=corpus,  dictionary=id2word)
     html_string = pyLDAvis.prepared_data_to_html(html_)
     components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
