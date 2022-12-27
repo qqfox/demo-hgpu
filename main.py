@@ -141,37 +141,56 @@ with lda_model:
     num_words = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
 
-    def topic(text_input):
-        id_word = corpora.Dictionary(text_input)
+# editing here
+    df = text_data[:-1]
+    data = df.text.tolist()
+    data_list = list(data)
+    data_words = [i.split() for i in data_list]
 
-        corpus = [id_word.doc2bow(text) for text in text_input]
-        ldamodel = gensim.models.ldamodel.LdaModel(
-            corpus=corpus,
-            id2word=id_word,
-            num_topics=10, 
-            random_state=2021,
-            update_every=1,
-            chunksize=100,
-            passes=10,
-            alpha='auto',
-            per_word_topics=True
-        )
-        
-        return  ldamodel,corpus,id_word
 
-    lda_model ,corpus,id_word = topic(text_vocab)   #All applied to our review ext
+    # Build the bigram and trigram models
+    bigram = gensim.models.Phrases(data_words, min_count=5, threshold=12) # higher threshold fewer phrases.
+    trigram = gensim.models.Phrases(bigram[data_words], threshold=12)
 
-    st.write(lda_model.print_topics(10)) #generate first 10 topics
+    # Faster way to get a sentence clubbed as a trigram/bigram
+    bigram_mod = gensim.models.phrases.Phraser(bigram)
+    trigram_mod = gensim.models.phrases.Phraser(trigram)
 
-    html_ = pyLDAvis.gensim.prepare(topic_model=lda_model, 
-                              corpus=corpus, 
-                              dictionary=id_word)
+    def make_bigrams(texts):
+        return [bigram_mod[doc] for doc in texts]
+
+    def make_trigrams(texts):
+        return [trigram_mod[bigram_mod[doc]] for doc in texts]
+    data_words_trigrams = make_trigrams(data_words)
+    # Create Dictionary
+    id2word = corpora.Dictionary(data_words_trigrams)
+
+    # Create Corpus
+    texts = data_words_trigrams
+
+    # Term Document Frequency / doc_term_matrix
+    corpus = [id2word.doc2bow(text) for text in texts]
+
+    ldamodel = gensim.models.ldamodel.LdaModel(
+        corpus=texts,
+        id2word=id2word,
+        num_topics=10, 
+        random_state=2021,
+        update_every=1,
+        chunksize=100,
+        passes=10,
+        alpha='auto',
+        per_word_topics=True
+    )
+
+    model_topics = ldamodel.show_topics(formatted=False)
+    st.write(ldamodel.print_topics(num_words=10))
+
+    html_ = pyLDAvis.gensim.prepare(topic_model=ldamodel,corpus=texts,  dictionary=id2word)
     html_string = pyLDAvis.prepared_data_to_html(html_)
     components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
-
-
-
+# tried method here
     # ktrain.text.preprocessor.detect_lang = ktrain.text.textutils.detect_lang
 
     # texts = text_data['comment_text']
