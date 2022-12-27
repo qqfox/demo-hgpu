@@ -173,7 +173,7 @@ with lda_model:
 
     # classes = 7
     # Build LDA model
-    ldamodel = gensim.models.ldamodel.LdaModel(corpus=texts,
+    ldamodel = gensim.models.ldamodel.LdaModel(corpus=corpus,
                                                id2word=id2word,
                                                num_topics=3,
                                                random_state=100,
