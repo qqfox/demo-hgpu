@@ -148,17 +148,17 @@ with lda_model:
                                         learning_decay = .7,
                                         random_state=0).fit(data_vectorized)
     
-    def show_topics(vectorizer, lda_model, n_words=10):
-        keywords = np.array(vectorizer.get_feature_names())
-        topic_keywords = []
-        for topic_weights in lda_model.components_:
-            top_keyword_locs = (-topic_weights).argsort()[:n_words]
-            topic_keywords.append(keywords.take(top_keyword_locs))
-        return topic_keywords
+    # def show_topics(vectorizer, lda_model, n_words=10):
+    #     keywords = np.array(vectorizer.get_feature_names())
+    #     topic_keywords = []
+    #     for topic_weights in lda_model.components_:
+    #         top_keyword_locs = (-topic_weights).argsort()[:n_words]
+    #         topic_keywords.append(keywords.take(top_keyword_locs))
+    #     return topic_keywords
 
-    topic_keywords = show_topics(CountVec, lda_model_, num_words)    
+    # topic_keywords = show_topics(CountVec, lda_model_, num_words)    
 
-    disp_col.write(topic_keywords)
+    # disp_col.write(topic_keywords)
 
     
     html_ = pyLDAvis.sklearn.prepare(lda_model_, data_vectorized, CountVec)
