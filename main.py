@@ -11,6 +11,7 @@ from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer 
 import pandas as pd
 import matplotlib.pyplot as plt
+import ktrain
 
 import string
 import re
@@ -23,6 +24,7 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
+
 from sklearn import metrics
 import pickle
 import warnings
@@ -138,15 +140,22 @@ with lda_model:
     num_words = sel_col.slider('choose the number of frequent words:', min_value=10, max_value=50,value=10,step=2)
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
 
+    ktrain.text.preprocessor.detect_lang = ktrain.text.textutils.detect_lang
 
-    CountVec = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
-    data_vectorized = CountVec.fit_transform(total_vocabulary) # fit input data
-    lda_model_ = LatentDirichletAllocation(n_components=num_clusters,
-                                        max_iter=10, 
-                                        learning_method='online',
-                                        learning_offset=70.,
-                                        learning_decay = .7,
-                                        random_state=0).fit(data_vectorized)
+    texts = text_data['comment_text']
+    tm = ktrain.text.get_topic_model(texts, n_topics=None, n_features=10000)
+    st.write(tm.print_topics())
+    tm.build(texts, threshold=0.25))
+
+
+    # CountVec = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
+    # data_vectorized = CountVec.fit_transform(total_vocabulary) # fit input data
+    # lda_model_ = LatentDirichletAllocation(n_components=num_clusters,
+    #                                     max_iter=10, 
+    #                                     learning_method='online',
+    #                                     learning_offset=70.,
+    #                                     learning_decay = .7,
+    #                                     random_state=0).fit(data_vectorized)
     
     # def show_topics(vectorizer, lda_model, n_words=10):
     #     keywords = np.array(vectorizer.get_feature_names())
