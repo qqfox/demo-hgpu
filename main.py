@@ -32,7 +32,8 @@ import math
 from wordcloud import WordCloud
 import streamlit as st
 from streamlit import components
-
+import io
+import requests
 from nltk.util import ngrams
 import pyLDAvis
 import pyLDAvis.sklearn
@@ -62,8 +63,14 @@ with header:
 with dataset:
     st.header('this dataset contains all the text crawled from reddit')
     st.text('dataset description')
-    # filename = r"https://raw.githubusercontent.com/qqfox/demo-hgpu/data/data_rx6900_Reddit_070822.csv"
-    text_data = pd.read_csv('https://raw.githubusercontent.com/qqfox/demo-hgpu/data/data_rx6900_Reddit_070822.csv', index_col = 0)
+
+
+    url = 'https://raw.githubusercontent.com/qqfox/demo-hgpu/main/data/data_rx6900_Reddit_070822.csv'
+    download = requests.get(url).content
+    # Reading the downloaded content and turning it into a pandas dataframe
+
+    text_data = pd.read_csv(io.StringIO(download.decode('utf-8')))
+
 
     # text_data = pd.read_csv(r'C:\Users\USER\Documents\GitHub\GPU\streamlit\data\data_rx6900_Reddit_070822.csv', index_col=0)
     st.write(text_data.head(5))
