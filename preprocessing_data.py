@@ -12,12 +12,15 @@ import re
 import gensim
 import nltk
 from gensim.parsing.preprocessing import STOPWORDS
-lemmatizer=WordNetLemmatizer()
 seed = 42
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer
+
+from nltk.stem import WordNetLemmatizer
+  
+lemmatizer = WordNetLemmatizer()
 
 import math
 from wordcloud import WordCloud
@@ -81,16 +84,16 @@ def preprocessing(text):
         
     return text
 
-# import spacy
-# spacy.cli.download("en")
-# nlp = spacy.load('en_core_web_lg', disable=['parser', 'ner'])
+import spacy
+spacy.cli.download("en")
+nlp = spacy.load('en_core_web_lg', disable=['parser', 'ner'])
 
-# def posta(texts, allowed_postags=['NOUN', 'VERB']):  # ['NOUN', 'ADJ', 'VERB', 'ADV']
-#     texts_out = []
-#     for sent in texts:
-#         doc = nlp(" ".join(sent))
-#         texts_out.append([token for token in doc if token.pos_ in allowed_postags]) # sửa, bỏ lemma đi
-#     return texts_out
+def posta(texts, allowed_postags=['NOUN', 'VERB']):  # ['NOUN', 'ADJ', 'VERB', 'ADV']
+    texts_out = []
+    for sent in texts:
+        doc = nlp(" ".join(sent))
+        texts_out.append([token for token in doc if token.pos_ in allowed_postags]) # sửa, bỏ lemma đi
+    return texts_out
 
 
 #process post text and title to add more information (need to process separately to avoid duplicate text to cmt)
@@ -105,7 +108,7 @@ def all_vocab_extraction(df):
     data_list = list(data_text)
     data_words = [i.split() for i in data_list]
 
-    # pos_text = posta(data_words , allowed_postags=['NOUN', 'VERB'])
+    pos_text = posta(data_words , allowed_postags=['NOUN', 'VERB'])
 
     df['pos_comment_text'] = data_words #pos_text 
     df['pos_comment_text'] = df['pos_comment_text'].apply(lambda x: ' '.join(map(str, x)))
@@ -117,9 +120,9 @@ def all_vocab_extraction(df):
         
     tokens_vs_stop = word_tokenize(corpus)
     all_text = [word for word in tokens_vs_stop]
-    # total_vocabulary = [WordNetLemmatizer().lemmatize(word) for word in all_text]
+    total_vocabulary = [lemmatizer.lemmatize(word) for word in all_text]
 
-    return all_text #total_vocabulary
+    return total_vocabulary
 
 def word_freq_bigram(text):
     

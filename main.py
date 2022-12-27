@@ -44,6 +44,9 @@ import pyLDAvis.sklearn
 nltk.download('punkt')
 nltk.download('wordnet')
 from gensim.parsing.preprocessing import STOPWORDS
+import spacy
+spacy.cli.download("en")
+nlp = spacy.load('en_core_web_lg', disable=['parser', 'ner'])
 
 from preprocessing_data import all_vocab_extraction, word_freq_bigram, preprocessing
 
@@ -89,6 +92,8 @@ with frequences:
 
     # text_data['comment_text'] = text_data.comment_text.apply(preprocessing(input_more_sw))
     text_data['comment_text'] = text_data.comment_text.apply(preprocessing)
+    text_data['comment_text'] = text_data.comment_text.apply(all_vocab_extraction)
+
     total_vocabulary = all_vocab_extraction(text_data)
 
     freq_dist = nltk.FreqDist(total_vocabulary)
