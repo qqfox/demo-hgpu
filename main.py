@@ -171,20 +171,24 @@ with lda_model:
     # Term Document Frequency / doc_term_matrix
     corpus = [id2word.doc2bow(text) for text in texts]
 
-    ldamodel = gensim.models.ldamodel.LdaModel(
-        corpus=texts,
-        id2word=id2word,
-        num_topics=10, 
-        random_state=2021,
-        update_every=1,
-        chunksize=100,
-        passes=10,
-        alpha='auto',
-        per_word_topics=True
-    )
+    # classes = 7
+    # Build LDA model
+    ldamodel = gensim.models.ldamodel.LdaModel(corpus=texts,
+                                               id2word=id2word,
+                                               num_topics=3,
+                                               random_state=100,
+                                               update_every=1,
+                                               chunksize=100,
+                                               passes=10,
+                                               alpha='auto',
+                                               per_word_topics=True,
+                                                minimum_probability=0)
+    # lda_model.save('lda_train.model')
+    # Print the Keyword in the 10 topics
+    st.write(lda_model.print_topics())
 
-    model_topics = ldamodel.show_topics(formatted=False)
-    st.write(ldamodel.print_topics(num_words=10))
+    # model_topics = ldamodel.show_topics(formatted=False)
+    # st.write(ldamodel.print_topics(num_words=10))
 
     html_ = pyLDAvis.gensim.prepare(topic_model=ldamodel,corpus=texts,  dictionary=id2word)
     html_string = pyLDAvis.prepared_data_to_html(html_)
