@@ -117,9 +117,9 @@ def all_vocab_extraction(df):
         
     tokens_vs_stop = word_tokenize(corpus)
     all_text = [word for word in tokens_vs_stop]
-    total_vocabulary = [WordNetLemmatizer().lemmatize(word) for word in all_text]
+    # total_vocabulary = [WordNetLemmatizer().lemmatize(word) for word in all_text]
 
-    return total_vocabulary
+    return all_text #total_vocabulary
 
 def word_freq_bigram(text):
     
