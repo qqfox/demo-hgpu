@@ -139,8 +139,8 @@ with lda_model:
     num_clusters = sel_col.selectbox('choose the number of clusters', options=[3,4,5,6,7,8],index=0)
 
 
-    CountVec = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
-    data_vectorized = CountVec.fit_transform(total_vocabulary) # fit input data
+    CountVectorizer = CountVectorizer(max_df=0.95, min_df=5, max_features=50000)
+    data_vectorized = CountVectorizer.fit_transform(total_vocabulary) # fit input data
     lda_model_ = LatentDirichletAllocation(n_components=num_clusters,
                                         max_iter=10, 
                                         learning_method='online',
@@ -161,7 +161,7 @@ with lda_model:
     # disp_col.write(topic_keywords)
 
     
-    html_ = pyLDAvis.sklearn.prepare(lda_model_, data_vectorized, CountVec)
+    html_ = pyLDAvis.sklearn.prepare(lda_model_, data_vectorized, CountVectorizer)
     html_string = pyLDAvis.prepared_data_to_html(html_)
     components.v1.html(html_string, width=1300, height=800, scrolling=True)
 
